@@ -1,4 +1,7 @@
 const express = require('express');
+const { MongoClient } = require('mongodb');
+const debug = require('debug')('app:adminRoutes');
+
 const adminRouter = express.Router();
 
 function router(nav) {
@@ -54,7 +57,28 @@ function router(nav) {
 
   adminRouter.route('/')
     .get((req, res) => {
-      res.send('Inserting Books');
+      const url = 'mongodb://localhost:27017';
+      const dbName = 'libraryApp';
+
+      (async function mongo() {
+        let client;
+
+        try {
+          client = await MongoClient.connect(url);
+          console.log('Connected correctly to server');
+
+          const db = client.db(dbName);
+
+          // Insert multiple documents
+          const response = await db.collection('books').insertMany(books);
+          res.json(response);
+        } catch (err) {
+          debug(err.stack);
+        }
+
+        // Close connection
+        client.close();
+      }());
     });
   return adminRouter;
 }
