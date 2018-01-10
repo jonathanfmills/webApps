@@ -50,6 +50,7 @@ function bookController(bookService, nav) {
         const book = await col.findOne({ _id: new ObjectID(id) });
         debug(book);
 
+        book.details = await bookService.getBookById(book.bookId);
         res.render(
           'bookView',
           {
@@ -67,9 +68,9 @@ function bookController(bookService, nav) {
     }());
   }
   function middleware(req, res, next) {
-    if (!req.user) {
-      res.redirect('/');
-    }
+    // if (!req.user) {
+    //   res.redirect('/');
+    // }
     next();
   }
   return { getIndex, getById, middleware };
