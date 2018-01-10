@@ -66,8 +66,13 @@ function bookController(bookService, nav) {
       client.close();
     }());
   }
-
-  return {getIndex, getById}
-};
+  function middleware(req, res, next) {
+    if (!req.user) {
+      res.redirect('/');
+    }
+    next();
+  }
+  return { getIndex, getById, middleware };
+}
 
 module.exports = bookController;
