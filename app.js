@@ -41,6 +41,7 @@ app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
+  debug(req.user, req.flash);
   res.render(
     'index',
     {
